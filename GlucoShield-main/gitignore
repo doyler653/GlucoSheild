@@ -1,0 +1,49 @@
+# OS Files
+.DS_Store
+Thumbs.db
+.env.local
+.env
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Build artifacts
+/dist/
+/build/
+*.zip
+*.tar.gz
+
+# Node modules (if using Node.js)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Package managers
+.pnp
+.pnp.js
+
+# Testing
+/coverage/
+.nyc_output/
+
+# Development
+.cache/
+temp/
+tmp/
+
+# Logs
+logs/
+*.log
+
+# Lock files (optional - uncomment if working in team)
+# package-lock.json
+# yarn.lock
+
+# Keep these files
+!.gitkeep

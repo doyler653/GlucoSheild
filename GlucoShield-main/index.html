@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Glucose Quest - Interactive game to learn about blood glucose, carbohydrates, insulin, and diabetes prevention">
+  <meta name="keywords" content="glucose, diabetes, education, interactive game, blood sugar, health">
+  <meta name="author" content="Glucose Quest Team">
+  <meta name="theme-color" content="#2C5AA0">
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+
+  
+  <title>Glucose Quest - Learn About Blood Sugar</title>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  
+  <nav>
+    <div class="container">
+      <a class="logo" onclick="showPage('home')">🩸 Glucose Quest</a>
+      <ul class="nav-links">
+        <li><a class="nav-link" onclick="showPage('home', event)">Home</a></li>
+        <li><a class="nav-link" onclick="showPage('education')">Learn</a></li>
+        <li><a class="nav-link" onclick="showPage('game')">Blood Balance</a></li>
+        <li><a class="nav-link" href="adventure.html">DiaCare Adventure</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  
+  <div id="home" class="page active">
+    <div class="container">
+      <div class="home-hero">
+        <h1>🎮 Glucose Quest</h1>
+        <p>Learn how your body manages blood sugar through an interactive, educational game!</p>
+        <button class="btn" onclick="showPage('game')">🎮 Start Playing</button>
+        <button class="btn btn-secondary" onclick="showPage('education')">📚 Learn First</button>
+      </div>
+
+      <div class="features">
+        <div class="feature-card">
+          <div class="emoji">🎯</div>
+          <h3>Interactive Game</h3>
+          <p>Learn by playing! Collect falling food items and manage your blood glucose levels across 4 progressively challenging levels.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="emoji">📚</div>
+          <h3>Science Education</h3>
+          <p>Understand how carbohydrates, insulin, and your body's biological systems work together to maintain healthy blood sugar.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="emoji">💪</div>
+          <h3>Health Awareness</h3>
+          <p>Discover why managing glucose matters, how it relates to diabetes prevention, and practical strategies for lifelong health.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="game" class="page">
+    <div class="container">
+      <div class="game-wrapper">
+        
+        <div class="game-main">
+          <div class="game-container">
+            
+            <div class="game-title">Glucose Game</div>
+
+            
+            <div class="level-banner">
+              <div class="level-title" id="levelTitle">Level 1: Carbs raise BG</div>
+              <div class="level-desc" id="levelDesc">Eat more carbs to increase BG</div>
+            </div>
+
+            
+            <div class="game-area">
+              
+              <div class="cloud cloud1"></div>
+              <div class="cloud cloud2"></div>
+
+              
+              <div class="hud-top">
+                <div class="hud-score">Score: <span id="score">0</span></div>
+                <div class="hud-glucose"><span id="glucoseTop">5.0</span> mmol/L</div>
+              </div>
+
+              
+              <div class="game-items" id="gameArea">
+                <div class="player"></div>
+              </div>
+            </div>
+
+            
+            <div class="hud-bottom">
+              <div class="glucose-label">BG</div>
+              <div class="bar-segments" id="glucoseBar">
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+              </div>
+              <div class="glucose-value"><span id="glucoseBottom">5.0</span> mmol/L</div>
+            </div>
+          </div>
+
+          
+          <div class="game-controls">
+            <p>⌨️ Use <strong>Arrow Keys</strong> to move left and right</p>
+            <p>🍎 Collect falling food items to change your blood glucose level</p>
+            <button class="btn-game" onclick="startGameRound()">▶️ Start Game</button>
+            <button class="btn-game" onclick="resetGame()">🔄 Reset Game</button>
+          </div>
+        </div>
+
+        
+        <div class="game-sidebar">
+          <div class="sidebar-title">📊 Game Status</div>
+
+          
+          <div id="glucoseStatusBox" class="glucose-status status-safe">
+            ✅ Normal Range
+          </div>
+
+          
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">Level:</span>
+              <span class="stat-value" id="sidebarLevel">1</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Score:</span>
+              <span class="stat-value" id="sidebarScore">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Glucose (BG):</span>
+              <span class="stat-value" id="sidebarGlucose">5.0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Carbs Eaten:</span>
+              <span class="stat-value" id="sidebarCarbs">0g</span>
+            </div>
+          </div>
+
+          
+          <h4 style="color: var(--primary); margin-bottom: 1rem; font-size: 1rem;">📖 Food Effects</h4>
+          <div style="font-size: 0.85rem; line-height: 1.8; color: var(--text-light);">
+            <p><strong>🍎 Red Apple:</strong><br>+1.5 BG (15g carbs)</p>
+            <p><strong>🍞 Brown Bread:</strong><br>+1.0–3.0 BG (10–30g carbs)</p>
+            <p><strong>🍭 Pink Candy:</strong><br>+2.0 BG (25g carbs)</p>
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid #ddd;">
+            <p style="margin-top: 1rem;"><strong>⚡ Level 4 Goal:</strong><br>Keep BG between 4.0–10.0 mmol/L</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="education" class="page">
+    <div class="container">
+      
+      <div class="edu-section">
+        <h2>🔬 What is Blood Glucose?</h2>
+        <p>Blood glucose (also called blood sugar) is the amount of glucose in your bloodstream. Glucose is a simple sugar that your body uses for energy. It's absolutely essential for survival, but keeping levels within a healthy range is crucial for long-term health and preventing serious complications.</p>
+
+        <h3>Normal Glucose Ranges</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>🎯 Fasting (before eating)</h4>
+            <p><strong>4.0–7.0 mmol/L</strong></p>
+            <p>This is the normal range when you haven't eaten for 8+ hours.</p>
+          </div>
+          <div class="info-box">
+            <h4>🍽️ After Meals</h4>
+            <p><strong>Less than 8.0 mmol/L</strong></p>
+            <p>Your glucose rises temporarily after eating, then returns to normal as your body processes the food.</p>
+          </div>
+          <div class="info-box">
+            <h4>⚖️ Throughout the Day</h4>
+            <p><strong>3.9–7.8 mmol/L (average)</strong></p>
+            <p>Your glucose naturally fluctuates based on meals, activity, stress, and sleep.</p>
+          </div>
+        </div>
+
+        <h3>When Glucose is Too Low (Hypoglycemia)</h3>
+        <div class="info-box">
+          <h4>⚠️ &lt; 4.0 mmol/L</h4>
+          <p><strong>Symptoms:</strong> Dizziness, trembling, sweating, confusion, weakness, rapid heartbeat</p>
+          <p><strong>Risk:</strong> Can lead to seizures or loss of consciousness if not treated quickly</p>
+          <p><strong>Immediate Treatment:</strong> Fast-acting carbs (glucose tablets, juice, candy)</p>
+        </div>
+
+        <h3>When Glucose is Too High (Hyperglycemia)</h3>
+        <div class="info-box">
+          <h4>⚠️ &gt; 10.0 mmol/L</h4>
+          <p><strong>Symptoms:</strong> Increased thirst, frequent urination, fatigue, blurred vision</p>
+          <p><strong>Risk:</strong> Long-term high glucose damages blood vessels and nerves, leading to heart disease, kidney problems, and vision loss</p>
+          <p><strong>Management:</strong> Balanced diet, exercise, medical treatment if needed</p>
+        </div>
+      </div>
+
+      
+      <div class="edu-section">
+        <h2>🍽️ How Food Affects Blood Glucose</h2>
+        <p>When you eat carbohydrates, your digestive system breaks them down into glucose molecules. These glucose molecules are absorbed into your bloodstream, which is why eating raises your blood glucose. Different types of carbohydrates are broken down at different speeds, which is why some foods cause rapid glucose spikes while others cause gradual increases.</p>
+
+        <h3>Carbohydrates in Different Foods</h3>
+        <div class="food-item">
+          <div class="food-emoji">🍎</div>
+          <div class="food-info">
+            <h4>Apple (medium)</h4>
+            <p><strong>~15g carbs</strong> | Raises BG by ~1.5 mmol/L | Contains fiber (slower absorption)</p>
+          </div>
+        </div>
+
+        <div class="food-item">
+          <div class="food-emoji">🍞</div>
+          <div class="food-info">
+            <h4>Bread Slice (white or whole wheat)</h4>
+            <p><strong>10–30g carbs</strong> | Varies by bread type | White bread ↑ glucose faster than whole wheat</p>
+          </div>
+        </div>
+
+        <div class="food-item">
+          <div class="food-emoji">🍭</div>
+          <div class="food-info">
+            <h4>Candy/Sweet</h4>
+            <p><strong>~25g carbs</strong> | Raises BG very quickly (high glycemic index) | Mostly simple sugars, minimal fiber</p>
+          </div>
+        </div>
+
+        <div class="food-item">
+          <div class="food-emoji">🥗</div>
+          <div class="food-info">
+            <h4>Vegetables & Lean Protein</h4>
+            <p><strong>Low carbs</strong> | Minimal impact on BG | Fiber slows glucose absorption significantly</p>
+          </div>
+        </div>
+
+        <h3>Glycemic Index (GI)</h3>
+        <p>The Glycemic Index measures how quickly a food raises blood glucose on a scale of 0-100:</p>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>🔴 High GI (&gt;70)</h4>
+            <p>White bread, candy, sugary drinks, white rice</p>
+          </div>
+          <div class="info-box">
+            <h4>🟡 Medium GI (56-69)</h4>
+            <p>Whole wheat bread, brown rice, oats</p>
+          </div>
+          <div class="info-box">
+            <h4>🟢 Low GI (&lt;55)</h4>
+            <p>Beans, nuts, most vegetables, whole grains</p>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="edu-section">
+        <h2>💉 Insulin: The Key Regulator</h2>
+        <p>Insulin is a hormone produced by your pancreas (a gland below your stomach). It acts like a "key" that opens cells to allow them to absorb glucose from the bloodstream. Without insulin, glucose can't enter cells efficiently, so it accumulates in the blood.</p>
+
+        <h3>How Insulin Works</h3>
+        <div class="info-box">
+          <h4>The Insulin Cycle</h4>
+          <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+            <li><strong>You eat carbs</strong> → Glucose enters bloodstream</li>
+            <li><strong>Glucose rises</strong> → Pancreas detects increase</li>
+            <li><strong>Pancreas releases insulin</strong> → Insulin circulates in blood</li>
+            <li><strong>Insulin "unlocks" cells</strong> → Cells absorb glucose</li>
+            <li><strong>Glucose decreases</strong> → Pancreas stops releasing insulin</li>
+            <li><strong>Cycle returns to normal</strong> → Ready for next meal</li>
+          </ol>
+        </div>
+
+        <h3>What Insulin Does</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>✅ Lowers Blood Glucose</h4>
+            <p>Allows cells to absorb glucose for energy or storage</p>
+          </div>
+          <div class="info-box">
+            <h4>✅ Stores Energy</h4>
+            <p>Unused glucose is stored as glycogen or fat for later use</p>
+          </div>
+          <div class="info-box">
+            <h4>✅ Regulates Metabolism</h4>
+            <p>Helps your body process carbs, fats, and proteins efficiently</p>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="edu-section">
+        <h2>🩺 Diabetes: When Glucose Control Breaks Down</h2>
+        <p>Diabetes occurs when the body can't properly regulate blood glucose levels, either because it can't produce insulin or can't use it effectively.</p>
+
+        <h3>Type 1 Diabetes</h3>
+        <div class="info-box">
+          <h4>What Happens</h4>
+          <p>The immune system attacks the cells in the pancreas that produce insulin. The pancreas stops making insulin completely.</p>
+        </div>
+        <div class="info-box">
+          <h4>Who Gets It</h4>
+          <p>Usually diagnosed in children and young adults (autoimmune condition)</p>
+        </div>
+        <div class="info-box">
+          <h4>Management</h4>
+          <p><strong>Insulin therapy:</strong> Daily insulin injections or insulin pump | <strong>Carb counting:</strong> Track and balance carbs | <strong>Blood testing:</strong> Regular glucose monitoring | <strong>Lifestyle:</strong> Healthy diet and exercise</p>
+        </div>
+
+        <h3>Type 2 Diabetes</h3>
+        <div class="info-box">
+          <h4>What Happens</h4>
+          <p>The body produces insulin, but cells become resistant to it. Glucose can't enter cells effectively, so it accumulates in the blood (insulin resistance).</p>
+        </div>
+        <div class="info-box">
+          <h4>Who Gets It</h4>
+          <p>Usually develops in adults (age 45+), but increasingly common in younger people. Risk factors: obesity, family history, sedentary lifestyle</p>
+        </div>
+        <div class="info-box">
+          <h4>Management</h4>
+          <p><strong>Lifestyle changes:</strong> Diet and exercise (often enough to control) | <strong>Medication:</strong> Oral medications if lifestyle changes aren't enough | <strong>Insulin:</strong> Sometimes needed in advanced cases</p>
+        </div>
+
+        <h3>Prediabetes</h3>
+        <p>A warning stage where blood glucose is higher than normal but not high enough to be diagnosed as type 2 diabetes. The good news: prediabetes can be reversed with lifestyle changes before it becomes full diabetes.</p>
+      </div>
+
+      
+      <div class="edu-section">
+        <h2>💪 Prevention & Management Strategies</h2>
+        <p>Whether you want to prevent diabetes or manage existing diabetes, the same healthy habits apply:</p>
+
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>🥗 Eat Healthy</h4>
+            <p><strong>Emphasize:</strong> Whole grains, vegetables, lean proteins, healthy fats</p>
+            <p><strong>Limit:</strong> Sugary drinks, candy, refined carbs, processed foods</p>
+            <p><strong>Tip:</strong> Pair carbs with protein and fiber to slow glucose absorption</p>
+          </div>
+
+          <div class="info-box">
+            <h4>🏃 Exercise Regularly</h4>
+            <p><strong>Goal:</strong> 150 minutes moderate activity per week</p>
+            <p><strong>Why:</strong> Exercise makes cells more sensitive to insulin</p>
+            <p><strong>Bonus:</strong> Even a 10-minute walk after meals helps lower glucose spikes</p>
+          </div>
+
+          <div class="info-box">
+            <h4>⚖️ Maintain Healthy Weight</h4>
+            <p><strong>Why:</strong> Excess fat tissue increases insulin resistance</p>
+            <p><strong>Impact:</strong> Even 5-10% weight loss can improve insulin sensitivity significantly</p>
+          </div>
+
+          <div class="info-box">
+            <h4>😴 Sleep Well</h4>
+            <p><strong>Goal:</strong> 7-9 hours per night</p>
+            <p><strong>Impact:</strong> Poor sleep reduces insulin sensitivity</p>
+            <p><strong>Connection:</strong> Sleep deprivation increases stress hormones that raise glucose</p>
+          </div>
+
+          <div class="info-box">
+            <h4>🧘 Manage Stress</h4>
+            <p><strong>How:</strong> Meditation, yoga, deep breathing, hobbies</p>
+            <p><strong>Why:</strong> Stress hormones increase glucose production</p>
+          </div>
+
+          <div class="info-box">
+            <h4>📊 Monitor Regularly</h4>
+            <p><strong>Fasting glucose:</strong> Check occasionally to track trends</p>
+            <p><strong>A1C test:</strong> Average glucose over 3 months (diabetes screening)</p>
+            <p><strong>Why:</strong> Early detection prevents complications</p>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="edu-section">
+        <h2>🎓 Key Takeaways</h2>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Balance is Key</h4>
+            <p>Maintaining healthy blood glucose requires balance between food intake, physical activity, stress, sleep, and insulin production. It's a whole-body system.</p>
+          </div>
+          <div class="info-box">
+            <h4>Not All Carbs Are Equal</h4>
+            <p>Complex carbs with fiber raise glucose more slowly than simple sugars. Choose whole grains, vegetables, and legumes.</p>
+          </div>
+          <div class="info-box">
+            <h4>Early Detection Saves Lives</h4>
+            <p>Regular glucose monitoring and lifestyle changes can prevent or delay type 2 diabetes by decades.</p>
+          </div>
+          <div class="info-box">
+            <h4>It's About More Than Sugar</h4>
+            <p>Stress, sleep, exercise, and weight all affect how your body handles glucose. True health requires a holistic approach.</p>
+          </div>
+          <div class="info-box">
+            <h4>You Have Control</h4>
+            <p>Most cases of prediabetes and type 2 diabetes can be managed or prevented through lifestyle choices you make every day.</p>
+          </div>
+          <div class="info-box">
+            <h4>Knowledge is Power</h4>
+            <p>Understanding how your body works gives you the tools to make informed decisions about your health.</p>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="edu-section">
+        <h2>📚 Additional Resources</h2>
+        <p>Want to learn more? Check out these trusted organizations:</p>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>American Diabetes Association</h4>
+            <p>www.diabetes.org - Comprehensive diabetes information and resources</p>
+          </div>
+          <div class="info-box">
+            <h4>World Health Organization</h4>
+            <p>www.who.int - Global diabetes facts and prevention strategies</p>
+          </div>
+          <div class="info-box">
+            <h4>Thriveabetes.ie</h4>
+            <p>Thriveabetes.ie - Support and resources for people with diabetes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="educator" class="page">
+  <div class="container">
+  <button class="btn" onclick="showPage('home', event)">← Back to Home</button>
+    <div class="edu-section">
+      <h2>👩‍🏫 Diabetes Educator Page</h2>
+      <p>
+        This page is designed to support teachers and diabetes educators using
+        Glucose Quest and DiaCare Adventure as educational tools. It outlines
+        the learning intentions and learning outcomes linked to the activities
+        in the game and accompanying content.
+      </p>
+    </div>
+
+    <div class="edu-section">
+      <h2>🎯 Learning Intentions</h2>
+      <div class="info-grid">
+        <div class="info-box">
+          <h4>Students will learn...</h4>
+          <p>what blood glucose is and why it is important for health.</p>
+        </div>
+        <div class="info-box">
+          <h4>Students will learn...</h4>
+          <p>how carbohydrates affect blood glucose levels.</p>
+        </div>
+        <div class="info-box">
+          <h4>Students will learn...</h4>
+          <p>the role of insulin in regulating blood glucose.</p>
+        </div>
+        <div class="info-box">
+          <h4>Students will learn...</h4>
+          <p>the difference between healthy glucose balance, hypoglycaemia and hyperglycaemia.</p>
+        </div>
+        <div class="info-box">
+          <h4>Students will learn...</h4>
+          <p>how lifestyle choices such as diet, exercise, sleep and stress affect glucose control.</p>
+        </div>
+        <div class="info-box">
+          <h4>Students will learn...</h4>
+          <p>how interactive simulation and gameplay can help develop scientific understanding.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="edu-section">
+      <h2>✅ Learning Outcomes</h2>
+      <div class="info-grid">
+        <div class="info-box">
+          <h4>By the end of this activity, students should be able to:</h4>
+          <p>define blood glucose and explain its role in the body.</p>
+        </div>
+        <div class="info-box">
+          <h4>By the end of this activity, students should be able to:</h4>
+          <p>describe how different foods can raise blood glucose levels by different amounts.</p>
+        </div>
+        <div class="info-box">
+          <h4>By the end of this activity, students should be able to:</h4>
+          <p>explain how insulin helps lower blood glucose by allowing cells to absorb glucose.</p>
+        </div>
+        <div class="info-box">
+          <h4>By the end of this activity, students should be able to:</h4>
+          <p>identify the symptoms and risks of glucose levels that are too low or too high.</p>
+        </div>
+        <div class="info-box">
+          <h4>By the end of this activity, students should be able to:</h4>
+          <p>compare type 1 diabetes, type 2 diabetes and prediabetes in simple terms.</p>
+        </div>
+        <div class="info-box">
+          <h4>By the end of this activity, students should be able to:</h4>
+          <p>suggest practical ways to support healthy glucose regulation and diabetes prevention.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="edu-section">
+      <h2>🧩 Suggested Classroom Use</h2>
+      <div class="info-box">
+        <p><strong>Starter:</strong> Ask students what they already know about blood sugar and diabetes.</p>
+        <p><strong>Main activity:</strong> Students play Glucose Quest and/or DiaCare Adventure.</p>
+        <p><strong>Discussion:</strong> Pause to discuss the effect of apples, bread, sweets and insulin on glucose levels.</p>
+        <p><strong>Reflection:</strong> Students explain what they learned about keeping blood glucose in a healthy range.</p>
+        <p><strong>Extension:</strong> Students design their own health game level or infographic based on glucose balance.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<footer style="background: var(--primary); color: white; text-align: center; padding: 2rem; margin-top: 3rem;">
+    <p>🩸 Glucose Quest - Learn. Play. Understand. Blood Glucose Management Edition</p>
+    <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">Educational tool for awareness. Not a substitute for professional medical advice.</p>
+    <p style="font-size: 0.8rem; margin-top: 1rem; opacity: 0.65;">
+  <a href="#" onclick="showPage('educator', event)" style="color: white; text-decoration: none;">
+    Educator Page
+  </a>
+</p>
+  </footer>
+
+  
+  <script src="script.js"></script>
+
+<script>
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+</script>
+</body>
+</html>

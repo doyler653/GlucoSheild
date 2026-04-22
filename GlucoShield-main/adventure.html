@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Defender | Game</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <script src="TemplateData/profiler.js"></script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="unity-page">
+<nav>
+  <div class="container">
+    <a class="logo" href="index.html">🩸 Glucose Quest</a>
+    <ul class="nav-links">
+      <li><a class="nav-link" href="index.html">Home</a></li>
+      <li><a class="nav-link" href="index.html#education">Learn</a></li>
+      <li><a class="nav-link" href="index.html#game">Blood Balance</a></li>
+      <li><a class="nav-link" href="adventure.html">DiaCare Adventure</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+    <div id="unity-container" class="unity-desktop">
+      <div id="unity-header">
+        <h1>DiaCare Adventure</h1>
+        <p>Teaching Diabetes Management one round at a time.</p>
+      </div>
+      <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"></div>
+      <div id="unity-footer">
+        <div id="unity-build-title">DiaCare Adventure v2.0</div>
+        <div style="display: flex; gap: 8px;">
+          <div id="unity-fullscreen-button"></div>
+          <button id="unload-btn">Unload Game</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/New folder.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/New folder.data",
+        frameworkUrl: buildUrl + "/New folder.framework.js",
+        codeUrl: buildUrl + "/New folder.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Data Defender",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          document.querySelector("#unity-fullscreen-button").onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+
+          var profile = unityProfiler.createButton(unityInstance);
+          profile.style.marginLeft = '5px';
+          document.querySelector("#unity-build-title").appendChild(profile);
+
+          var unloadBtn = document.querySelector("#unload-btn");
+          unloadBtn.onclick = () => {
+            unityInstance.Quit().then(() => {
+              unityProfiler.shutDown();
+              document.querySelector("#unity-container").remove();
+              canvas = null;
+              script.remove();
+              script = null;
+            });
+          };
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+
+      document.body.appendChild(script);
+    </script>
+  <!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
